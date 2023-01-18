@@ -1,14 +1,14 @@
-const Header = (props) => {
+const Header = ( { name } ) => {
   return (
     <>
-      <h1>{props.name}</h1>
+      <h1>{name}</h1>
     </>
   )
 }
 
-const Part = (props) => {
+const Part = ( { part, exercise } ) => {
   return (
-    <p>{props.part}: {props.exercise}</p>
+    <p>{part}: {exercise}</p>
   )
 }
 

@@ -18,7 +18,6 @@ const PopularAnecdote = ( {voteCount, anecdotes} ) => {
       <p>{anecdotes[popularAnecdote()]}</p>
       <p>Has {voteCount[popularAnecdote()]} votes.</p>   
     </>
-
   )
 }
 

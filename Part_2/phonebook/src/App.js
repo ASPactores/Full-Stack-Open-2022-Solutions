@@ -1,12 +1,20 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
 import Person from "./components/Person";
+import axios from "axios";
 
 const App = () => {
   const [persons, setPersons] = useState([
-    { name: "Arto Hellas", number: "040-123456"}
+    { name: "Arto Hellas", number: "040-123456" },
   ]);
+
+  // get data from server as a side effect
+  useEffect(() => {
+    axios.get("http://localhost:3001/persons").then((response) => {
+      setPersons(response.data);
+    });
+  }, []);
 
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");

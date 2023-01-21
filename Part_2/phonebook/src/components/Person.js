@@ -1,9 +1,14 @@
-const Person = ({ filteredList }) => {
-  return filteredList.map((person) => (
-    <p key={person.name}>
-      {person.name} {person.number}
-    </p>
-  ));
+const Person = ({ filteredList, deletePerson }) => {
+  return filteredList.map((person) => {
+    return (
+      <p key={person.id}>
+        {person.name} {person.number}{" "}
+        <button onClick={() => deletePerson(person.name, person.id)}>
+          Delete
+        </button>
+      </p>
+    );
+  });
 };
 
 export default Person;

@@ -2,18 +2,16 @@ import { useEffect, useState } from "react";
 import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
 import Person from "./components/Person";
-import axios from "axios";
+import personService from "./services/person";
 
 const App = () => {
-  const [persons, setPersons] = useState([
-    { name: "Arto Hellas", number: "040-123456" },
-  ]);
+  const [persons, setPersons] = useState([]);
 
   // get data from server as a side effect
   useEffect(() => {
-    axios.get("http://localhost:3001/persons").then((response) => {
-      setPersons(response.data);
-    });
+    personService
+      .getPersons()
+      .then((data) => setPersons((persons) => persons.concat(data)));
   }, []);
 
   const [newName, setNewName] = useState("");
@@ -35,12 +33,22 @@ const App = () => {
     });
 
     if (isNotDuplicate) {
-      setPersons(persons.concat(personObject));
+      personService.create(personObject).then((data) => {
+        setPersons(persons.concat(data));
+      });
     } else {
       alert(`${newName} is already added to phonebook.`);
     }
   };
 
+  const deletePerson = async (personName, personId) => {
+    if (window.confirm(`Delete ${personName}?`)) {
+      await personService.remove(personId);
+      setPersons((person) =>
+        person.filter((notDeleted) => notDeleted.id !== personId)
+      );
+    }
+  };
   const handleFilter = (event) => setFilter(event.target.value);
   const handleNewName = (event) => setNewName(event.target.value);
   const handleNewNumber = (event) => setNewNumber(event.target.value);
@@ -62,7 +70,7 @@ const App = () => {
         handleNewNumber={handleNewNumber}
       />
       <h2>Numbers</h2>
-      <Person filteredList={filteredList} />
+      <Person filteredList={filteredList} deletePerson={deletePerson} />
     </div>
   );
 };

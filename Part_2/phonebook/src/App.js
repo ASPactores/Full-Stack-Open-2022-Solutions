@@ -26,7 +26,7 @@ const App = () => {
     };
 
     const isNotDuplicate = persons.every((person) => {
-      if (JSON.stringify(personObject) === JSON.stringify(person)) {
+      if (personObject.name === person.name) {
         return false;
       }
       return true;
@@ -37,7 +37,22 @@ const App = () => {
         setPersons(persons.concat(data));
       });
     } else {
-      alert(`${newName} is already added to phonebook.`);
+      if (
+        window.confirm(
+          `${newName} is already added to phonebook, replace the old number with a new one?`
+        )
+      ) {
+        const duplicate = persons.find(
+          (person) => person.name === personObject.name
+        );
+        personService.replace(duplicate, personObject).then((data) => {
+          setPersons(
+            persons.map((person) =>
+              person.id !== duplicate.id ? person : data
+            )
+          );
+        });
+      }
     }
   };
 

@@ -8,6 +8,11 @@ const create = (personObject) =>
 
 const remove = (personId) => axios.delete(`${baseUrl}/${personId}`);
 
-const personService = { getPersons, create, remove };
+const replace = (duplicate, personObject) =>
+  axios
+    .put(`${baseUrl}/${duplicate.id}`, personObject)
+    .then((response) => response.data);
+
+const personService = { getPersons, create, remove, replace };
 
 export default personService;

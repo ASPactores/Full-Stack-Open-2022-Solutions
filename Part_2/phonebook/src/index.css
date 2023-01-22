@@ -1,0 +1,15 @@
+.successMessage, .errorMessage {
+    padding: 10px;
+    color: white;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    font: bold 16px sans-serif;
+}
+
+.successMessage {
+    background: rgb(101, 180, 88);
+}
+
+.errorMessage {
+    background: rgb(180, 97, 88);
+}

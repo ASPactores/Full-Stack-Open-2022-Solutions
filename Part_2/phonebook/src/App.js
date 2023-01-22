@@ -3,6 +3,8 @@ import Filter from "./components/Filter";
 import PersonForm from "./components/PersonForm";
 import Person from "./components/Person";
 import personService from "./services/person";
+import SuccessNotification from "./components/SuccessNotification";
+import ErrorNotification from "./components/ErrorNotification";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -17,6 +19,8 @@ const App = () => {
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [filter, setFilter] = useState("");
+  const [successMessage, setSuccessMessage] = useState(null);
+  const [errorMessage, setErrorMessage] = useState(null);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -35,6 +39,10 @@ const App = () => {
     if (isNotDuplicate) {
       personService.create(personObject).then((data) => {
         setPersons(persons.concat(data));
+        setSuccessMessage(`Added ${data.name}`);
+        setTimeout(() => {
+          setSuccessMessage(null);
+        }, 5000);
       });
     } else {
       if (
@@ -45,13 +53,26 @@ const App = () => {
         const duplicate = persons.find(
           (person) => person.name === personObject.name
         );
-        personService.replace(duplicate, personObject).then((data) => {
-          setPersons(
-            persons.map((person) =>
-              person.id !== duplicate.id ? person : data
-            )
-          );
-        });
+        personService
+          .replace(duplicate, personObject)
+          .then((data) => {
+            setPersons(
+              persons.map((person) =>
+                person.id !== duplicate.id ? person : data
+              )
+            );
+          })
+          .catch(() => {
+            setErrorMessage(
+              `Information about ${personObject.name} has already been removed`
+            );
+            setTimeout(() => {
+              setErrorMessage(null);
+            }, 5000);
+            setPersons(
+              persons.filter((person) => person.name !== personObject.name)
+            );
+          });
       }
     }
   };
@@ -75,6 +96,8 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <SuccessNotification message={successMessage} />
+      <ErrorNotification message={errorMessage} />
       <Filter filter={filter} handleFilter={handleFilter} />
       <h2>Add new entry</h2>
       <PersonForm
